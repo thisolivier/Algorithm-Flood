@@ -1,3 +1,43 @@
 body {
     font-family: sans-serif;
 }
+
+.row{
+    display:flex;
+}
+.field{
+    flex: 1 0 50px;
+    display: inline-block;
+    position: relative;
+    text-align: center;
+    vertical-align: center;
+    height:100%;
+    background: white;
+}
+
+.row:nth-child(odd) .field:nth-child(odd),
+.row:nth-child(even) .field:nth-child(even){
+    background: lightgoldenrodyellow;
+}
+
+.field:before {
+    content:'';
+    float:left;
+    padding-top:100%;
+}
+
+header{
+    display: flex;
+    align-items: baseline; 
+    flex-wrap: wrap;
+}
+
+header div:first-of-type{
+    flex: 0 1 300px;
+    margin-right:2em;
+}
+
+header div:last-of-type{
+    flex: 1 2 300px;
+    min-width: 300px;
+}

@@ -90,6 +90,82 @@ $(document).ready(function(){
         [0,1,0,2,3,1,1,1],
         [1,1,1,1,3,3,3,3]
     ]
+
+    test_array2 = [
+        [1,4,3,6,2,3,7,1,2],
+        [2,4,4,6,3,2,8,7,6],
+        [2,5,1,6,6,2,3,7,6],
+        [1,2,1,1,3,6,5,2,7]
+    ]
+
+    function render_map(world){
+        $('#map').html("");
+        function NodeMaker(value="Idiot", classes=""){
+            this.filling = value;
+            this.opening = '<div class="'+ classes +'">';
+            this.close = '</div>';
+            this.render = function(){
+                if (typeof this.filling != "string") {
+                    let tempVal = "";
+                    for (item in this.filling){
+                        tempVal += this.filling[item].render();
+                    }
+                    this.filling = tempVal;
+                }
+                return this.opening + this.filling + this.close;
+            };
+        }
+
+        for (rowIndex in world){
+            let rowObj = new NodeMaker(new Array, "row");
+            for (locIndex in world[rowIndex]){
+                let data = world[rowIndex][locIndex];
+                let nodeObj = new NodeMaker(data.toString(), "field");
+                rowObj.filling = rowObj.filling.concat(nodeObj);
+            }
+            $('#map').append(rowObj.render());
+        }
+    }
+
+    function add_regenerator(){
+        function buildArray(string){
+            let balance = 0;
+
+            for (charIndex in string){
+                char = string[charIndex];
+                if (char == "["){
+                    balance += 1;
+                } else if (char == "]"){
+                    balance -= 1;
+                }
+                if (balance < 0){
+                    // Check for a mal-formed array.
+                    return false;
+                }
+            }
+
+            if (!balance) {
+                let output = eval("[" + string + "]");
+                while (output.length == 1){
+                    // Remove's redundant array nesting
+                    output = output[0];
+                }
+                render_map(output);
+                return true;
+            }
+        }
+        $('#new_world').submit(function(event){
+            event.preventDefault();
+            const value = $( "input:first" ).val();
+            if (!buildArray(value)){
+                console.log("==========");
+                console.log("Bad Array");
+                console.log("==========");
+            };
+        });
+    }
+
+    add_regenerator();
     render_map(test_array);
     console.log(great_flood(test_array));
 });
